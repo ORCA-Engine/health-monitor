@@ -46,7 +46,10 @@ Install tmux on Ubuntu/Debian if needed:
 
 Use a `python` interpreter that reports version 3.11 or newer.
 
-## First-time setup
+## Installation (first time only)
+
+Complete this section once on a new host. If this host already has the project
+installed and has just restarted, skip to **Restart after host shutdown or reboot**.
 
 ### 1. Open a persistent terminal
 
@@ -132,7 +135,7 @@ nano .env
   use the same port in your health check.
 - `.env` is read at startup, so restart the server after changing it.
 
-## Run the server
+## First run after installation
 
 From the **activated** shell, inside `server/`:
 
@@ -174,7 +177,7 @@ If `tmux ls` already lists `health-monitor`, **attach** to it. Do not run
 `tmux new-session -s health-monitor` again; tmux rejects an existing session name.
 Starting another server under a different session name can cause a port conflict.
 
-## Stop and restart
+## Restart the app without rebooting
 
 Inside the attached session:
 
@@ -183,11 +186,12 @@ Inside the attached session:
   `python -m app.main`.
 - `exit` only after the server has stopped.
 
-After a reboot, tmux sessions and the running server are gone; files, the venv,
-and saved SQLite data remain. Log in, create a session, activate the venv, and
-start the app again. These instructions don't configure automatic startup.
+## Restart after host shutdown or reboot
 
-## Subsequent starts (the short version)
+After the host boots, reconnect over SSH. Shutdown ends tmux sessions and the
+running app, but keeps the installed packages, `.venv`, configuration, and saved
+SQLite data. **Don't repeat installation or create the environment again.**
+These instructions don't configure automatic startup.
 
 First check `tmux ls`. If the session exists, attach using the commands above;
 if the server is still running, don't run the startup commands again.
@@ -201,7 +205,16 @@ cd server
 python -m app.main
 ```
 
-No reinstall, no venv re-creation. Then `Ctrl+b`, release, `d` to detach.
+Check the server from another SSH shell:
+
+```bash
+curl http://localhost:8000/healthz
+```
+
+Use your configured port instead of `8000` if different (`.env.example` uses
+`8080`). Once it responds with `{"status":"ok"}`, return to the tmux shell,
+press `Ctrl+b`, release both keys, then press `d`. Wait for the detached message
+before closing SSH. No reinstall or venv re-creation needed.
 
 ## Troubleshooting
 
