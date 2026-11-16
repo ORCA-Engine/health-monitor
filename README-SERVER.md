@@ -30,25 +30,21 @@ Use exactly that path. Do not create `server/.venv`.
 1. **Python 3.11 or newer.** Check it:
 
    ```bash
-   python3 --version
+   python --version
    ```
 
    The project declares `requires-python = ">=3.11"`.
 
 2. **tmux** (a persistent terminal that survives SSH disconnects).
 
-3. **venv support** (`python3-venv`). On Ubuntu/Debian:
+Install tmux on Ubuntu/Debian if needed:
 
    ```bash
    sudo apt update
-   sudo apt install -y tmux python3-venv
+    sudo apt install -y tmux
    ```
 
-   Version caveat: the `python3`/`python3-venv` from the distro may be older
-   than 3.11 on older Ubuntu releases (22.04 ships 3.10). If
-   `python3 --version` is below 3.11, install a newer interpreter (for example
-   the `deadsnakes` PPA or a distro release that ships 3.11+) and use that
-   interpreter for the commands below.
+Use a `python` interpreter that reports version 3.11 or newer.
 
 ## First-time setup
 
@@ -65,15 +61,13 @@ inside it. Everything you start here keeps running when you disconnect SSH.
 
 ```bash
 cd /home/orca-jumpserver/Projects/health-monitor
-python3 --version
+python --version
 ```
 
 ### 3. Create the virtual environment (only if it does not exist)
 
 ```bash
-if [ ! -d .venv ]; then
-    python3 -m venv .venv
-fi
+python -m venv .venv
 ```
 
 Do not delete and recreate `.venv` on every run, and do not create a second one
@@ -212,8 +206,6 @@ No reinstall, no venv re-creation. Then `Ctrl+b`, release, `d` to detach.
 ## Troubleshooting
 
 - **`tmux: command not found`** - `sudo apt install -y tmux`.
-- **`ensurepip is not available` / venv creation fails** -
-  `sudo apt install -y python3-venv` (or the matching `python3.x-venv`).
 - **`ModuleNotFoundError: No module named 'app'` or missing `sites.json`** -
   wrong directory. You must be in `server/` with the venv active.
 - **`Address already in use`** - something already holds the port:
